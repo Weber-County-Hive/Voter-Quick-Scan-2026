@@ -7,7 +7,7 @@ Flip cards for Utah's Nov. 3, 2026 ballot: who paid for each campaign, what the 
   1. Said vs. did: their own words contradicted by their own record, both sourced.
   2. Insider money: 20% or more from leadership/caucus PACs, network PACs (Doers, CMV, All In For Utah, Lincoln Hill, Conservative Millennials, Elevating Local Leaders, UINPAC, SenDemPAC and others) or sitting officeholders.
   3. Gives like an insider: their campaign sends money to other officeholders.
-- **C** in place of R or D: 30% or more from corporations and industry groups. Unions, party committees and leadership PACs are counted separately.
+- **C-R, C-D**: a C added in front of the party letter when 30% or more of the money came from corporations and industry groups. C-R means a corporate-funded Republican. Party letters: R = Republican, D = Democrat, FWD = Forward Party, U = Unaffiliated, WI = Write-in. Unions, party committees and leadership PACs are counted separately.
 - **Worth a look**: none of the above. A starting point for research, not an endorsement.
 - **Watching**: relationships on record worth following.
 - **On the record**: notable votes, shown but not scored.
