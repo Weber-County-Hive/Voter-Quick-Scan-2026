@@ -36,6 +36,14 @@ button:focus-visible,select:focus-visible,.card:focus-visible{outline:3px solid 
 .race h2{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:1.3rem;margin:0;border-bottom:3px solid var(--gold);padding-bottom:3px}
 .race h2 span{color:var(--muted);font-weight:500;font-size:1rem;margin-left:8px}
 .racenote{background:var(--panel);border-left:4px solid var(--red);padding:8px 12px;font-size:.92rem;max-width:70ch}
+.compare{flex:1 1 300px;min-width:0;max-width:100%;background:var(--panel);border-radius:10px;padding:12px 14px;align-self:flex-start}
+.compare h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:1rem;margin:0 0 8px;color:var(--ink)}
+.cmpwrap{overflow-x:auto}
+.compare table{border-collapse:collapse;width:100%;font-size:.84rem;font-variant-numeric:tabular-nums}
+.compare th,.compare td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.compare thead th{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:.9rem}
+.compare tbody th{font-weight:600;color:var(--muted);white-space:nowrap;font-size:.78rem}
+.compare .src{color:var(--muted);margin-top:6px}
 .row{display:flex;flex-wrap:wrap;gap:18px}
 .card{width:300px;max-width:100%;height:440px;perspective:1200px;background:none;border:0;padding:0;cursor:pointer;text-align:left;font:inherit;color:inherit}
 .flip{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
@@ -52,6 +60,7 @@ button:focus-visible,select:focus-visible,.card:focus-visible{outline:3px solid 
 .portrait svg.qmart{width:74%;margin-bottom:14px}
 .letter{position:absolute;right:8px;bottom:8px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.6rem;color:#fff;background:#3A5F8A;border:3px solid #fff}
 .letter.long{font-size:1rem}
+.cnote{position:absolute;left:8px;right:60px;bottom:10px;background:rgba(156,61,46,.95);color:#fff;font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.03em;line-height:1.15;padding:4px 7px;border-radius:3px;text-transform:uppercase}
 .letter.c{background:var(--c-corp)}
 .banner{position:absolute;left:-12%;right:-12%;top:18px;transform:rotate(-7deg);text-align:center;font-family:var(--display);font-weight:800;font-size:1.55rem;letter-spacing:.08em;padding:3px 0;border-block:3px solid #fff;text-transform:uppercase;color:#fff;background:var(--red)}
 .banner.skunk{background:linear-gradient(#111 0 38%,#F4F4F4 38% 62%,#111 62%);color:#fff;font-size:1.25rem;text-shadow:0 0 3px #000,0 0 6px #000}
@@ -102,7 +111,7 @@ h3 em{font-style:normal;color:#B7791F;letter-spacing:.04em}
   <div class="key">
     <div><b><span class="pill vote">Vote them out</span></b>Incumbents only. Any one of: their own words contradicted by something they controlled (a vote, a bill they filed, a disclosure form). A bill failing to pass never counts, since that depends on the other 103 legislators · 20% or more of their money from the insider network (leadership and caucus PACs; network PACs such as Doers, CMV, All In For Utah, Lincoln Hill, Utah Forward, Conservative Millennials, UINPAC and SenDemPAC; and sitting officeholders giving $1,000 or more). Doesn't apply when gifts from individual donors outweigh all PAC, business, party and insider money combined. A candidate's own money never counts against them, but it doesn't cancel out PAC money either · their campaign gives to other officeholders.</div>
     <div><b><span class="pill skunk">Looks like a skunk</span></b>Not in the seat yet, but already trips the same rules: said vs. did, 20%+ insider money, or gives like an insider. Looks like a skunk, acts like a skunk, stinks like a skunk.</div>
-    <div><b><span class="pill c">C</span> in place of R or D</b>30% or more of reported campaign money came from corporations and industry groups. In most Utah districts the Republican nomination decides the seat, so the R on the ballot can say more about where a candidate can win than about who they answer to. The C shows who is paying. Unions, party committees, leadership PACs and officeholders' checks are counted separately and never make a C. Insider money can bring a callout, but only corporate and industry money can bring a C.</div>
+    <div><b><span class="pill c">C</span> = Corporate-funded</b>Replaces the R or D when 30% or more of reported campaign money came from corporations and industry groups. In most Utah districts the Republican nomination decides the seat, so the R on the ballot can say more about where a candidate can win than about who they answer to. The C shows who is paying. Unions, party committees, leadership PACs and officeholders' checks are counted separately and never make a C. Insider money can bring a callout, but only corporate and industry money can bring a C.</div>
     <div><b><span class="pill worth">On the record</span></b>Votes worth knowing about, such as standing alone against a bill. Shown on the card, not scored.</div>
     <div><b><span class="pill watch">Watching</span></b>No rule tripped yet, but the record shows relationships worth following. Explained on the card.</div>
     <div><b><span class="pill worth">Worth a look</span></b>None of the above applies. A starting point for your own research, not an endorsement.</div>
@@ -140,7 +149,7 @@ DATA.forEach(d=>{
   d.pending=!d.flag&&pw.length>0;
   d.letter=d.corpShare!=null&&d.corpShare>=.3?"C":(/forward/i.test(d.party||"")?"FWD":/unaffil|independent/i.test(d.party||"")?"U":/write-in/i.test(d.party||"")?"WI":(d.party||"?"));
   d.worth=!d.flag&&!d.pending&&!d.watch&&d.letter!=="C";
-  d.why=d.flag?why.join(" · "):d.watch?"Watching: relationships on record":d.pending?"Pending: "+pw.join(", "):d.worth?"No flags on the filed record":"";
+  d.why=d.flag?why.join(" · "):(d.peopleWin&&d.insShare>=.2)?"Individual donors outweigh PAC and insider money":d.watch?"Watching: relationships on record":d.pending?"Pending: "+pw.join(", "):d.worth?"No flags on the filed record":"";
 });
 const TABS=[["all","All"],["vote","Vote them out"],["skunk","Skunk"],["Incumbents","Incumbents"],["Open seat","Open seats"],["Challengers","Challengers"],["worth","Worth a look"],["watch","Watching"],["hl","On the record"],["pend","Pending"]];
 let tab="all",area="all";
@@ -169,8 +178,8 @@ function card(d,i){
   <div class="face front"><div class="inner">
     <div class="band"><span>${esc(d.race.replace("Utah ",""))}</span><span>${esc(d.section==="Open seat"?"Open seat":d.section.replace(/s$/,""))}</span></div>
     <div class="portrait">${ban}${d.vote?WEASEL:d.skunk?SKUNK:d.worth?QM:SIL}
-      <div class="letter ${d.letter==="C"?"c":""} ${d.letter.length>2?"long":""}" title="${d.letter==="C"?"30%+ from corporations and industry":"Party"}">${esc(d.letter.length>3?d.letter.slice(0,1):d.letter)}</div></div>
-    <div class="plate"><div class="name">${esc(d.name)}</div><div class="meta">${esc(d.party||"Party n/a")}${d.office?" · "+esc(d.office):""}</div>
+      ${d.letter==="C"?`<div class="cnote">C = ${Math.round(d.corpShare*100)}% corporate &amp; industry money</div>`:""}<div class="letter ${d.letter==="C"?"c":""} ${d.letter.length>2?"long":""}" title="${d.letter==="C"?"30%+ from corporations and industry":"Party"}">${esc(d.letter.length>3?d.letter.slice(0,1):d.letter)}</div></div>
+    <div class="plate"><div class="name">${esc(d.name)}</div><div class="meta">${d.letter==="C"?"On the ballot as "+esc(d.party):esc(d.party||"Party n/a")}${d.office?" · "+esc(d.office):""}</div>
     <div class="why">${esc(d.why)}</div></div><div class="tap">tap to flip ↻</div>
   </div></div>
   <div class="face back"><div class="inner">
@@ -192,12 +201,29 @@ function card(d,i){
     </div>
   </div></div></div></button>`;
 }
+function tagOf(d){return d.vote?'<span class="pill vote">Vote them out</span>':d.skunk?'<span class="pill skunk">Skunk</span>':d.watch?'<span class="pill watch">Watching</span>':d.pending?'<span class="pill pend">Pending</span>':d.worth?'<span class="pill worth">Worth a look</span>':'—';}
+function pct(v,d){return (v!=null&&d.raised)?Math.round(v/d.raised*100)+'%':'—';}
+function compare(list){
+  const rows=[
+    ["Tag",d=>tagOf(d)],
+    ["Letter",d=>d.letter==="C"?`<b>C</b>: ${Math.round(d.corpShare*100)}% from corporations &amp; industry (on the ballot as ${esc(d.party)})`:esc(d.letter)],
+    ["Seat",d=>esc(d.section==="Incumbents"?"Incumbent":d.section==="Challengers"?"Challenger":"Open seat")],
+    ["Raised",d=>d.raised!=null?$(d.raised):"—"],
+    ["Period",d=>esc(d.thru||"—")],
+    ["From people (incl. self)",d=>pct(d.indiv,d)],
+    ["Insider network",d=>pct(d.insider,d)],
+    ["Corporations & industry",d=>pct(d.corp,d)],
+    ["Unions",d=>pct(d.union,d)],
+    ["Why",d=>esc(d.why||"")],
+    ["Rubric overall",d=>d.rubric&&d.rubric.Overall?esc(d.rubric.Overall):"—"]];
+  return `<div class="compare"><h4>Side by side</h4><div class="cmpwrap"><table><thead><tr><th></th>${list.map(d=>`<th>${esc(d.name)}</th>`).join("")}</tr></thead><tbody>${rows.map(([l,f])=>`<tr><th>${l}</th>${list.map(d=>`<td>${f(d)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><div class="src">Percent of money raised in each candidate's filing period. "—" means not in the filings yet.</div></div>`;
+}
 function render(){
   const rows=DATA.map((d,i)=>[d,i]).filter(([d])=>(area==="all"||d.area===area)&&(tab==="all"||(tab==="vote"&&d.vote)||(tab==="skunk"&&d.skunk)||(tab==="worth"&&d.worth)||(tab==="pend"&&d.pending)||(tab==="watch"&&d.watch)||(tab==="hl"&&d.highlight)||d.section===tab));
   document.getElementById("count").textContent=rows.length+" candidates";
   const groups={};rows.forEach(([d,i])=>{const g=(groups[d.race]=groups[d.race]||{area:d.area,items:[],all:DATA.filter(x=>x.race===d.race)});g.items.push(card(d,i))});
   const list=document.getElementById("list");
-  list.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([r,g])=>`<section class="race"><h2>${esc(r)}<span>${esc(g.area)}</span></h2>${g.all.length>1&&g.all.every(x=>x.flag)?`<div class="racenote">Every candidate in this race trips at least one rule. The tags don't rank them. Flip each card to see what triggered it and decide which record matters more to you.</div>`:""}<div class="row">${g.items.join("")}</div></section>`).join('<div style="height:18px"></div>'):'<div class="none">No candidates match this view.</div>';
+  list.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([r,g])=>`<section class="race"><h2>${esc(r)}<span>${esc(g.area)}</span></h2>${g.all.length>1&&g.all.every(x=>x.flag)?`<div class="racenote">Every candidate in this race trips at least one rule. The tags don't rank them. Flip each card to see what triggered it and decide which record matters more to you.</div>`:""}<div class="row">${g.items.join("")}${g.all.length>1?compare(g.all):""}</div></section>`).join('<div style="height:18px"></div>'):'<div class="none">No candidates match this view.</div>';
   list.querySelectorAll(".card").forEach(c=>c.onclick=()=>c.classList.toggle("flipped"));
 }
 render();
